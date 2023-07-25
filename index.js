@@ -1,4 +1,5 @@
 const express = require('express')
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
 const cors = require('cors')
 require('dotenv').config()
@@ -19,7 +20,7 @@ const corsOptions = {
 
 
   
-const { MongoClient, ServerApiVersion } = require('mongodb');
+
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.vhjeumo.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -63,6 +64,13 @@ async function run() {
         const result = await collegesCollection.find().toArray();
         res.send(result);
       })
+    // get single colleges
+    app.get("/colleges/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await collegesCollection.findOne(query);
+      res.send(result);
+    })
 
 
 
